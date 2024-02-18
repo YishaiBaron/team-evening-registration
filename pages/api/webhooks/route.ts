@@ -32,6 +32,21 @@ async function validateFormData(data: any): Promise<{ isValid: boolean; message:
   const db = await open({ filename: dbPath, driver: sqlite3.Database });
 
   // Check if the employee already exists in the database
+  const createTable = await db.exec(`
+  CREATE TABLE IF NOT EXISTS registrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee TEXT,
+    spouseJoining BOOLEAN,
+    childrenJoining INTEGER,
+    childrenOver18 INTEGER,
+    shabbatObservance BOOLEAN,
+    numberOfRooms INTEGER,
+    connectingDoor BOOLEAN,
+    transportation INTEGER,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
   const existingEmployee = await db.get('SELECT * FROM registrations WHERE employee = ?', [data.employee]);
 
   await db.close();
@@ -50,22 +65,6 @@ async function validateFormData(data: any): Promise<{ isValid: boolean; message:
 async function saveFormDataToDatabase(data: any) {
   const db = await open({ filename: dbPath, driver: sqlite3.Database });
   
-  // Create a 'registrations' table if it doesn't exist
-  await db.exec(`
-    CREATE TABLE IF NOT EXISTS registrations (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      employee TEXT,
-      spouseJoining BOOLEAN,
-      childrenJoining INTEGER,
-      childrenOver18 INTEGER,
-      shabbatObservance BOOLEAN,
-      numberOfRooms INTEGER,
-      connectingDoor BOOLEAN,
-      transportation INTEGER,
-      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
   // Insert data into the 'registrations' table
   await db.run(`
     INSERT INTO registrations 
