@@ -8,11 +8,12 @@ interface InputFieldProps {
   placeholder?: string;
   register: any;
   onChange: (value: any,id: any) => void; // Callback for onChange
+
 }
 
 
 
-const InputField: React.FC<InputFieldProps> = ({ label, type, id, placeholder, register,onChange}) => (
+const InputField: React.FC<InputFieldProps> = ({ label, type, id, placeholder, register,onChange }) => (
   
   <div className="mb-4">
     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={id}>
@@ -23,7 +24,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, id, placeholder, r
       id={id}
       placeholder={placeholder}
       className="p-2 w-full border rounded"
-      {...register(id, { required: true},
+      {...register(id, { required: true  ,  validate: (value: number) => value >= 0 },
        )}
        
       onChange={(e) => {
